@@ -148,11 +148,11 @@ export function PoseTracker({ exerciseType, onExerciseTypeChange, workoutId }: P
   return (
     <div className="space-y-4">
       <div className="flex items-center space-x-4">
-        <label className="text-sm font-medium text-gray-700">Exercise Type:</label>
+        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Exercise Type:</label>
         <select
           value={exerciseType}
           onChange={(e) => onExerciseTypeChange(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-lg"
+          className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
         >
           <option value="squat">Squat</option>
           <option value="pushup">Push-up</option>
@@ -172,43 +172,97 @@ export function PoseTracker({ exerciseType, onExerciseTypeChange, workoutId }: P
       </div>
 
       <div className="flex space-x-4">
-        <button
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           onClick={isRecording ? stopTracking : startTracking}
-          className={`px-6 py-3 rounded-lg font-medium transition-colors ${
+          className={`px-6 py-3 rounded-lg font-medium transition-colors flex items-center gap-2 shadow-lg ${
             isRecording
               ? 'bg-red-600 text-white hover:bg-red-700'
               : 'bg-primary text-white hover:bg-primary/90'
           }`}
         >
-          {isRecording ? 'Stop Tracking' : 'Start Tracking'}
-        </button>
+          {isRecording ? (
+            <>
+              <motion.span
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ duration: 0.5, repeat: Infinity }}
+              >
+                ⏹️
+              </motion.span>
+              Stop Tracking
+            </>
+          ) : (
+            <>
+              <span>▶️</span>
+              Start Tracking
+            </>
+          )}
+        </motion.button>
 
-        <button
+        <motion.button
+          whileHover={{ scale: repCount > 0 ? 1.05 : 1 }}
+          whileTap={{ scale: repCount > 0 ? 0.95 : 1 }}
           onClick={saveSet}
           disabled={repCount === 0}
-          className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg"
         >
+          <span>💾</span>
           Save Set ({repCount} reps)
-        </button>
+        </motion.button>
       </div>
 
       <div className="grid grid-cols-3 gap-4">
-        <div className="bg-blue-50 rounded-lg p-4 text-center">
-          <p className="text-sm text-gray-600">Reps</p>
-          <p className="text-3xl font-bold text-gray-900">{repCount}</p>
-        </div>
-
-        <div className="bg-green-50 rounded-lg p-4 text-center">
-          <p className="text-sm text-gray-600">Pose Score</p>
-          <p className="text-3xl font-bold text-gray-900">
-            {poseScore !== null ? Math.round(poseScore) : '--'}
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 rounded-xl p-4 text-center border border-blue-200 dark:border-blue-800"
+        >
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 flex items-center justify-center gap-1">
+            <span>🔢</span> Reps
           </p>
-        </div>
+          <motion.p
+            key={repCount}
+            initial={{ scale: 1.3, color: '#3b82f6' }}
+            animate={{ scale: 1, color: 'inherit' }}
+            className="text-4xl font-bold text-gray-900 dark:text-white"
+          >
+            {repCount}
+          </motion.p>
+        </motion.div>
 
-        <div className="bg-yellow-50 rounded-lg p-4">
-          <p className="text-sm text-gray-600 mb-1">Feedback</p>
-          <p className="text-sm font-medium text-gray-900">{feedback || 'No feedback yet'}</p>
-        </div>
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 rounded-xl p-4 text-center border border-green-200 dark:border-green-800"
+        >
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 flex items-center justify-center gap-1">
+            <span>⭐</span> Pose Score
+          </p>
+          <motion.p
+            key={poseScore}
+            initial={{ scale: 1.3, color: '#10b981' }}
+            animate={{ scale: 1, color: 'inherit' }}
+            className="text-4xl font-bold text-gray-900 dark:text-white"
+          >
+            {poseScore !== null ? Math.round(poseScore) : '--'}
+          </motion.p>
+        </motion.div>
+
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          className="bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/30 dark:to-yellow-800/30 rounded-xl p-4 border border-yellow-200 dark:border-yellow-800"
+        >
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 flex items-center gap-1">
+            <span>💬</span> Feedback
+          </p>
+          <motion.p
+            key={feedback}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-sm font-medium text-gray-900 dark:text-white"
+          >
+            {feedback || 'No feedback yet'}
+          </motion.p>
+        </motion.div>
       </div>
     </div>
   )

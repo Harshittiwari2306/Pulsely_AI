@@ -5,6 +5,9 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import { PoseTracker } from '@/components/workout/PoseTracker'
 import { WorkoutForm } from '@/components/workout/WorkoutForm'
+import { ThemeToggle } from '@/components/ThemeToggle'
+import { FadeIn } from '@/components/animations/FadeIn'
+import { motion } from 'framer-motion'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
 const AI_SERVICE_URL = process.env.NEXT_PUBLIC_AI_SERVICE_URL || 'http://localhost:8000'
@@ -71,18 +74,19 @@ export default function WorkoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm border-b">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <nav className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <button
                 onClick={() => router.push('/dashboard')}
-                className="text-gray-700 hover:text-gray-900"
+                className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
               >
                 ← Back to Dashboard
               </button>
             </div>
+            <ThemeToggle />
           </div>
         </div>
       </nav>
@@ -91,38 +95,59 @@ export default function WorkoutPage() {
         {!activeWorkout ? (
           <WorkoutForm onStart={startWorkout} />
         ) : (
-          <div className="space-y-6">
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                {activeWorkout.name}
-              </h2>
-              
-              <div className="flex space-x-4 mb-6">
-                <button
-                  onClick={() => setShowCamera(!showCamera)}
-                  className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
-                >
-                  {showCamera ? 'Hide' : 'Show'} Camera
-                </button>
-                <button
-                  onClick={completeWorkout}
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-                >
-                  Complete Workout
-                </button>
-              </div>
-
-              {showCamera && (
-                <div className="mt-6">
-                  <PoseTracker
-                    exerciseType={exerciseType}
-                    onExerciseTypeChange={setExerciseType}
-                    workoutId={activeWorkout.id}
-                  />
+          <FadeIn>
+            <div className="space-y-6">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-100 dark:border-gray-700"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-purple-400">
+                    {activeWorkout.name}
+                  </h2>
+                  <motion.div
+                    animate={{ rotate: [0, 10, -10, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, repeatDelay: 2 }}
+                    className="text-3xl"
+                  >
+                    🔥
+                  </motion.div>
                 </div>
-              )}
+                
+                <div className="flex space-x-4 mb-6">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setShowCamera(!showCamera)}
+                    className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors flex items-center gap-2 shadow-lg"
+                  >
+                    <span>{showCamera ? '📷' : '📹'}</span>
+                    {showCamera ? 'Hide' : 'Show'} Camera
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={completeWorkout}
+                    className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 shadow-lg"
+                  >
+                    <span>✅</span>
+                    Complete Workout
+                  </motion.button>
+                </div>
+
+                {showCamera && (
+                  <div className="mt-6">
+                    <PoseTracker
+                      exerciseType={exerciseType}
+                      onExerciseTypeChange={setExerciseType}
+                      workoutId={activeWorkout.id}
+                    />
+                  </div>
+                )}
+              </motion.div>
             </div>
-          </div>
+          </FadeIn>
         )}
       </main>
     </div>

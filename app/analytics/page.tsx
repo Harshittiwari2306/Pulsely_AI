@@ -6,6 +6,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { ProgressChart } from '@/components/analytics/ProgressChart'
 import { MuscleGroupHeatmap } from '@/components/analytics/MuscleGroupHeatmap'
 import { WorkoutFrequency } from '@/components/analytics/WorkoutFrequency'
+import { ThemeToggle } from '@/components/ThemeToggle'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
 
@@ -67,39 +68,40 @@ export default function AnalyticsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm border-b">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <nav className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <button
                 onClick={() => router.push('/dashboard')}
-                className="text-gray-700 hover:text-gray-900"
+                className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
               >
                 ← Back to Dashboard
               </button>
             </div>
+            <ThemeToggle />
           </div>
         </div>
       </nav>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Analytics</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">Analytics</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Workout Frequency</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Workout Frequency</h2>
             <WorkoutFrequency data={stats?.workoutFrequency} />
           </div>
 
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Muscle Group Distribution</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Muscle Group Distribution</h2>
             <MuscleGroupHeatmap data={stats?.muscleGroups} />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Progress Over Time</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Progress Over Time</h2>
           <ProgressChart data={progress?.progress} />
         </div>
       </main>
