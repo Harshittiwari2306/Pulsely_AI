@@ -4,7 +4,6 @@ import prisma from '../lib/prisma.js'
 import { authenticate } from '../middleware/auth.js'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 
-console.log('GEMINI_API_KEY:', process.env.GEMINI_API_KEY ? 'FOUND' : 'MISSING')
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY
 
